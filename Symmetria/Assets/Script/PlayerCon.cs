@@ -14,6 +14,10 @@ public class PlayerCon : MonoBehaviour
 
     bool parents_set;
 
+    bool direction;
+
+    int key = 0;
+
     void Start()
     {
         rigid2D = GetComponent<Rigidbody2D>();
@@ -23,5 +27,20 @@ public class PlayerCon : MonoBehaviour
     void Update()
     {
         
+    }
+
+    void Player_move()
+    {
+        if(Input.GetKey(KeyCode.RightArrow))
+        {
+            key = 1;
+            direction = true;
+        }
+
+        if(Input.GetKey(KeyCode.LeftArrow))
+        {
+            key = -1;
+            direction = false;
+        }
     }
 }
