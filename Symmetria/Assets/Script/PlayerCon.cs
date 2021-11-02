@@ -23,12 +23,17 @@ public class PlayerCon : MonoBehaviour
     /// </summary>
     bool parents_set;
 
+    /// <summary>
+    /// 家具に触れているかどうか
+    /// </summary>
+    bool furnitures_touch;
+
     int key = 0;
 
     void Start()
     {
-        furnitures = GameObject.FindGameObjectsWithTag("furniture");
-
+        //furnitures = GameObject.FindGameObjectsWithTag("furniture");
+        furnitures_touch = false;
         rigid2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
@@ -62,12 +67,23 @@ public class PlayerCon : MonoBehaviour
         rigid2D.AddForce(transform.right * key * walkforce);
 
         //反転
-        if(key!=0)
+        if (key != 0)
         {
             transform.localScale = new Vector3(key, 1, 1);
         }
+        else
+        {
+            //入力していないとき
+            rigid2D.velocity = Vector2.zero;
+        }
 
-        //animator.speed=
+        if(!parents_set)
+        {
+            if(Input.GetKeyDown(KeyCode.Z))
+            {
+                //家具を持つメソッド起動
+            }
+        }
     }
 
     /// <summary>
@@ -81,6 +97,23 @@ public class PlayerCon : MonoBehaviour
             //歩くSE再生
             Debug.Log("SE再生");
             walk_ct = 0;
+        }
+    }
+
+    void OnTrigger2D(Collider2D col)
+    {
+        if(col.gameObject.tag=="Door")
+        {
+            //ドアを開くメソッド起動
+        }
+
+        if(col.gameObject.tag== "furnitures"||col.gameObject.tag== "furnitures_mirror")
+        {
+            furnitures_touch = true;
+            if (!parents_set)
+            {
+
+            }
         }
     }
 }
