@@ -32,7 +32,7 @@ public class PlayerCon : MonoBehaviour
 
     void Start()
     {
-        //furnitures = GameObject.FindGameObjectsWithTag("furniture");
+        furnitures = GameObject.FindGameObjectsWithTag("furniture");
         furnitures_touch = false;
         rigid2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -76,12 +76,33 @@ public class PlayerCon : MonoBehaviour
             //入力していないとき
             rigid2D.velocity = Vector2.zero;
         }
+    }
 
-        if(!parents_set)
+    /// <summary>
+    /// 家具を持つ
+    /// </summary>
+    /// <param name="h_furnitures">触れている家具</param>
+    void Have_furnitures(GameObject h_furnitures)
+    {
+        if (Input.GetKeyDown(KeyCode.Z))
         {
-            if(Input.GetKeyDown(KeyCode.Z))
+            //家具に触れているとき
+            if (furnitures_touch)
             {
-                //家具を持つメソッド起動
+                //親子関係じゃないとき
+                if (!parents_set)
+                {
+                    parents_set = true;
+                    h_furnitures.transform.parent = transform;
+                    h_furnitures.GetComponent<Renderer>().sortingOrder = 5;
+
+                    h_furnitures.transform.position
+                           = new Vector3(transform.position.x, h_furnitures.transform.position.y, transform.position.z);
+                }
+                else
+                {
+                    parents_set = false;
+                }
             }
         }
     }
@@ -110,10 +131,6 @@ public class PlayerCon : MonoBehaviour
         if(col.gameObject.tag== "furnitures"||col.gameObject.tag== "furnitures_mirror")
         {
             furnitures_touch = true;
-            if (!parents_set)
-            {
-
-            }
         }
     }
 }
