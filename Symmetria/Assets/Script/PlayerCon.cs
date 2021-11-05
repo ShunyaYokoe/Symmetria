@@ -69,12 +69,26 @@ public class PlayerCon : MonoBehaviour
         //反転
         if (key != 0)
         {
-            transform.localScale = new Vector3(key, 1, 1);
+            if (!parents_set)
+            {
+                //親子関係じゃないとき
+                transform.localScale = new Vector3(key, 1, 1);
+            }
+            else
+            {
+                //親子関係の時プレイヤーに合わせて向きを変える
+            }
+          
         }
         else
         {
             //入力していないとき
             rigid2D.velocity = Vector2.zero;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+
         }
     }
 
@@ -84,25 +98,26 @@ public class PlayerCon : MonoBehaviour
     /// <param name="h_furnitures">触れている家具</param>
     void Have_furnitures(GameObject h_furnitures)
     {
-        if (Input.GetKeyDown(KeyCode.Z))
+        //家具に触れているとき
+        if (furnitures_touch)
         {
-            //家具に触れているとき
-            if (furnitures_touch)
+            //親子関係じゃないとき
+            if (!parents_set)
             {
-                //親子関係じゃないとき
-                if (!parents_set)
-                {
-                    parents_set = true;
-                    h_furnitures.transform.parent = transform;
-                    h_furnitures.GetComponent<Renderer>().sortingOrder = 5;
-
-                    h_furnitures.transform.position
-                           = new Vector3(transform.position.x, h_furnitures.transform.position.y, transform.position.z);
-                }
-                else
-                {
-                    parents_set = false;
-                }
+                parents_set = true;
+                Debug.Log("持つ");
+                //親子関係にする
+                h_furnitures.transform.parent = transform;
+                //レイヤーを上げる
+                h_furnitures.GetComponent<Renderer>().sortingOrder = 5;
+                //子オブジェクトのポジションを親オブジェクトの横にずらす
+                h_furnitures.transform.position
+                       = new Vector3(transform.position.x + 0.2f, h_furnitures.transform.position.y, transform.position.z);
+            }
+            else
+            {
+                parents_set = false;
+                Debug.Log("降ろす");
             }
         }
     }
@@ -121,7 +136,7 @@ public class PlayerCon : MonoBehaviour
         }
     }
 
-    void OnTrigger2D(Collider2D col)
+    void OnTriggerStay2D(Collider2D col)
     {
         if(col.gameObject.tag=="Door")
         {
@@ -132,5 +147,37 @@ public class PlayerCon : MonoBehaviour
         {
             furnitures_touch = true;
         }
+        else
+        {
+            furnitures_touch = false;
+        }
     }
+
+    /*
+     *void Update()
+     *{
+     *   zボタン押す｛家具持つメソッド起動｝
+     *}
+     * 
+     *void 家具持つメソッド()
+     *{
+     * if(kagu_touch){親子関係にする}
+     * 
+     * if（親子関係の時）
+     * {
+     * 　if(家具に触れていないとき)
+     *  {
+     *   降ろす
+     *  }
+     * }
+     * 
+     *} 
+     * 
+     *void 当たり判定メソッド
+     *{
+     * 
+     * kagu_touch=true;
+     * 
+     *}
+     */
 }
