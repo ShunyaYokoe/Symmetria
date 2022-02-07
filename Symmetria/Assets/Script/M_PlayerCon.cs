@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCon : MonoBehaviour
+public class M_PlayerCon : MonoBehaviour
 {
     Rigidbody2D rigid2D;
     Animator animator;
@@ -100,10 +100,11 @@ public class PlayerCon : MonoBehaviour
     void Player_move()
     {
         player_dire = 0;
-       
+
         walk_ct = 0;
 
         player_dire = Input.GetAxisRaw("Horizontal");
+        player_dire *= -1.0f;
 
         //現在の速度
         float pl_speed = Mathf.Abs(rigid2D.velocity.x);
@@ -121,7 +122,7 @@ public class PlayerCon : MonoBehaviour
 
         //速度に応じてアニメーション速度を変える
         animator.speed = pl_speed / 2.0f;
-       
+
         if (player_dire != 0)
         {
             last_pl_dire = player_dire;
@@ -189,12 +190,12 @@ public class PlayerCon : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D col)
     {
-        if(col.gameObject.tag=="Door")
+        if (col.gameObject.tag == "Door")
         {
             //ドアを開くメソッド起動
         }
 
-        if(col.gameObject.tag== "furniture"||col.gameObject.tag== "furniture_mirror")
+        if (col.gameObject.tag == "furniture" || col.gameObject.tag == "furniture_mirror")
         {
             furnitures_touch = true;
             t_furniture = col.gameObject;
